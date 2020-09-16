@@ -6,6 +6,13 @@ const JWT = require('jsonwebtoken');
 const User = require('../models/User');
 const Todo = require('../models/Todo');
 
+const signToken = userID => {
+    return JWT.sign({
+        iss : 'Junaid',
+        sub : userID
+    },'Junaid',{expiresIn: "1h"});
+};
+
 userRouter.post('/register', (req,res) => {
    const { username, password, role } = req.body;
    User.findOne({username}, (err, user) => {
@@ -23,6 +30,15 @@ userRouter.post('/register', (req,res) => {
            });
        }
    });
+});
+
+userRouter.post('/login', passport.authenticate('local', {session: false}),(req, res) => {
+    if(req.isAuthenticated()){
+        const { _id, username, role } = req.user;
+        const token = signToken(_id);
+        res.cookie('access_token',token,{httpOnly:true, sameSite:true});
+        res.status(200).json({isAuthenticated:true, user: {username, role}});
+    }
 });
 
 module.exports = userRouter;
