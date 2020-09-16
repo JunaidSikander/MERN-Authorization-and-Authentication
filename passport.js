@@ -13,7 +13,7 @@ const cookieExtractor = req => {
 
 //Authorization
 passport.use(new JwtStrategy({
-    jwrFromRequest : cookieExtractor,
+    jwtFromRequest : cookieExtractor,
     secretOrKey : 'Junaid'
 },(payload, done) => {
     User.findById({_id: payload.sub}, (err,user) => {

@@ -10,20 +10,8 @@ mongoose.connect('mongodb://localhost:27017/mernauth',{useNewUrlParser: true, us
     console.log('Successfully Connected to Database');
 });
 
-const User = require('./models/User');
-
-const userInput = {
-    username: "junicoder123",
-    password: "123456",
-    role: "admin"
-};
-
-const user = new User(userInput);
-user.save((err,document) => {
-    if(err)
-        console.log(err);
-    console.log(document);
-});
+const userRouter = require('./routes/User');
+app.use('/user',userRouter);
 
 app.listen(port, () => {
    console.log('Express server started');
